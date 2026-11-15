@@ -256,7 +256,8 @@ function connectOnline(create){
    if(m.type==='error'){if(status)status.textContent='Ошибка: '+m.message}
    if(m.type==='joined_room'){onlineRoom=m.room;onlinePlayers=m.room.players||[];if(status)status.textContent='Комната '+m.room.code+' создана. Поделись кодом с другом.';startMatch(1)}
    if(m.type==='room_update'&&m.room){onlineRoom=m.room;onlinePlayers=m.room.players||[]}
-   if(m.type==='snapshot'){onlinePlayers=m.players||[]}\n   if(m.type==='player_hit'&&m.targetId===onlinePlayerId&&game){game.player.hp=m.hp;}
+   if(m.type==='snapshot'){onlinePlayers=m.players||[]}
+   if(m.type==='player_hit'&&m.targetId===onlinePlayerId&&game){game.player.hp=m.hp;}
    if(m.type==='player_left'){onlinePlayers=onlinePlayers.filter(p=>p.id!==m.playerId)}
    if(m.type==='attack'&&game&&m.playerId!==onlinePlayerId){const attacker=onlinePlayers.find(p=>p.id===m.playerId);if(attacker)game.shots.push({x:attacker.x*innerWidth,y:attacker.y*innerHeight,vx:0,vy:0,team:false,life:8})}
   };
