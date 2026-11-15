@@ -61,6 +61,12 @@ jobs:
             cat tunnel.log
             exit 1
           fi
+      - name: Publish server address artifact immediately
+        uses: actions/upload-artifact@v4
+        with:
+          name: temporary-online-server-address
+          path: online-server-address.txt
+          if-no-files-found: error
       - name: Keep temporary server alive
         run: |
           echo "Server will stay online for up to 55 minutes."
