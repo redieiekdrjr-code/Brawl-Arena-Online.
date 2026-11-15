@@ -55,7 +55,45 @@
  .side-menu{display:none}
  #musicToggle{border:2px solid #5976ad;border-radius:10px;background:#101a3b;color:white;font-weight:900;padding:7px 9px}
 }
-</style></head><body>
+</style>
+<style>
+/* Lobby layout: bold arcade HUD and bottom event strip, based on the reference composition */
+.profile-strip{display:none}.rank-badge{display:none}.bottom-pass{display:none}.event-card{display:none}
+@media (orientation:landscape) and (min-width:560px){
+ .season{display:none}
+ .hero{top:12%;width:36%;pointer-events:none}
+ .hero h1{font-size:clamp(14px,2vw,23px);opacity:.0}
+ .hero p{display:none}
+ .stage{inset:14% 20% 18%}
+ .orb{width:min(42vh,34vw);height:min(42vh,34vw);font-size:min(24vh,20vw);background:radial-gradient(circle at 50% 40%,#ffe9a1 0%,#ffbf53 40%,#dc6b38 72%,#854b9c 100%);border:4px solid #fff0a8;box-shadow:0 0 0 100vmax #ffffff05,0 10px 0 #155b8a,0 18px 35px #003a7b88}
+ .fighter-name{bottom:0;transform:translateY(4px);background:#152b51;border:2px solid #e8e8ff;padding:5px 14px}
+ .profile-strip{display:flex;position:fixed;z-index:6;top:8px;left:clamp(145px,17vw,210px);height:54px;align-items:center;background:#1b2545;border:3px solid #7781a4;border-radius:8px;box-shadow:0 4px #080f25;padding:4px 10px;gap:9px;min-width:180px}
+ .profile-avatar{width:39px;height:39px;display:grid;place-items:center;background:#536080;border:2px solid #aab5d2;border-radius:7px;font-size:25px}
+ .profile-progress{font-size:clamp(10px,1.2vw,14px);font-weight:1000;white-space:nowrap}
+ .progress-track{height:9px;background:#0d1833;border:1px solid #8091b4;border-radius:8px;margin-top:4px;overflow:hidden}
+ .progress-track i{display:block;width:45%;height:100%;background:#f18a43}
+ .profile-level{background:#f4cb45;color:#43260b;font-weight:1000;border-radius:6px;padding:7px 9px}
+ .rank-badge{display:block;position:fixed;z-index:4;top:11%;left:50%;transform:translateX(-50%);background:#172342;border:3px solid #e4d8ff;border-radius:10px;padding:4px 12px;text-align:center;box-shadow:0 3px #08152d}
+ .rank-badge b{font-size:9px;display:block;color:#dce7ff}.rank-badge strong{font-size:17px;color:#ffcf4c}
+ .bottom-pass{display:block;position:fixed;z-index:5;left:1.3%;bottom:2%;width:27%;height:18%;min-height:62px;background:linear-gradient(110deg,#ffdc37,#ffb900);border:3px solid #fff0a0;border-radius:9px;box-shadow:0 5px #92551d;color:#2a1b0a;padding:6px 10px;transform:skew(-2deg)}
+ .pass-title{font-size:clamp(12px,1.8vw,20px);font-weight:1000;text-shadow:0 1px #fff}
+ .pass-progress{position:absolute;bottom:6px;left:9px;right:9px;height:24px;border:2px solid #624b21;border-radius:12px;background:#6a5835;color:white;display:flex;justify-content:space-between;align-items:center;padding:0 9px;font-size:12px;font-weight:1000}
+ .pass-progress b{background:#f4d24c;color:#35210b;border-radius:50%;padding:2px 7px}
+ .event-card{display:block;position:fixed;z-index:5;left:30%;bottom:2%;width:34%;height:18%;min-height:62px;background:linear-gradient(120deg,#17213c,#26375c);border:3px solid #8595bb;border-radius:9px;box-shadow:0 5px #08152d;padding:6px 12px}
+ .event-meta{font-size:clamp(8px,1vw,11px);text-align:right;color:#b9c8e7;font-weight:800}
+ .event-name{font-size:clamp(12px,1.7vw,19px);font-weight:1000;text-shadow:0 2px #000;margin-top:3px}
+ .event-desc{font-size:clamp(9px,1vw,12px);color:#a9ed68;font-weight:900}
+ .event-card button{position:absolute;right:6px;bottom:6px;background:#344a73;color:white;border:2px solid #a9bce0;border-radius:6px;padding:4px 7px;font-size:clamp(8px,.9vw,11px);font-weight:1000}
+ .primary{right:1.3%;bottom:2%;width:23%;height:18%;padding:8px;font-size:clamp(20px,3vw,32px);border:3px solid #fff4;border-radius:9px;box-shadow:0 5px #955017;text-shadow:0 2px #fff8}
+ .side-menu{top:37%;bottom:27%;width:clamp(72px,9vw,105px)}
+ .side-menu button{background:linear-gradient(#344c78,#182a4e);border:2px solid #8ea5cf;box-shadow:0 4px #0c1b37}
+ .side-menu button span{font-size:clamp(18px,2.6vh,27px)}
+}
+@media (orientation:portrait){
+ .profile-strip,.rank-badge,.bottom-pass,.event-card{display:none}
+}
+</style>
+</head><body>
 <header class="top"><div class="logo">BRAWL<br>ARENA</div><div class="wallet"><div class="pill">🟡 <span id="coins">1250</span></div><div class="pill">💎 <span id="gems">50</span></div><button id="musicToggle" onclick="toggleMusic()" aria-label="Включить музыку">♫ ВКЛ. МУЗЫКУ</button></div></header>
 <aside class="side-menu left" aria-label="Игровое меню">
 <button onclick="openPanel('shop')"><span>🛒</span>МАГАЗИН</button>
@@ -67,6 +105,11 @@
 <button onclick="openPanel('club')"><span>🛡️</span>КЛУБ</button>
 <button onclick="openPanel('chat')"><span>💬</span>ЧАТ</button>
 </aside>
+
+<div class="profile-strip"><div class="profile-avatar">☠</div><div class="profile-progress"><b>SASHA　🏆 45</b><div class="progress-track"><i></i></div></div><div class="profile-level">★</div></div>
+<div class="rank-badge"><b>RANK</b><strong>8</strong></div>
+<div class="bottom-pass"><div class="pass-title">🎟 BRAWL PASS</div><div class="pass-progress"><span>33/100</span><b>3</b></div></div>
+<div class="event-card"><div class="event-meta">СОБЫТИЕ · НОВАЯ АРЕНА</div><div class="event-name">⚔ СТОЛКНОВЕНИЕ</div><div class="event-desc">Победи всех соперников</div><button onclick="openPanel('modes')">ВЫБРАТЬ РЕЖИМ　›</button></div>
 <div class="season">СЕЗОН 01 · АРЕНА ЛЕГЕНД</div><section class="hero"><h1>ГОТОВ К БОЮ?</h1><p>Выбери бойца и покажи свой стиль</p></section>
 <div class="stage"><div class="orb" id="heroIcon">🤠</div><div class="fighter-name" id="heroName">RANGER · РАНГ 8</div></div>
 <button class="primary" onclick="openPanel('modes')">⚔ ИГРАТЬ</button>
