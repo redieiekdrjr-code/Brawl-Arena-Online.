@@ -1,0 +1,10 @@
+{
+  "name": "brawl-arena-online-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "WebSocket multiplayer room server for Brawl Arena Online",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=20" },
+  "dependencies": { "ws": "^8.18.0" }
+}
