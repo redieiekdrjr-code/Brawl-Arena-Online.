@@ -83,8 +83,19 @@ wss.on('connection', ws => {
       player.y = Math.max(0, Math.min(1, y));
       player.facing = Number.isFinite(Number(msg.facing)) ? Math.max(-1, Math.min(1, Number(msg.facing))) : 0;
     } else if (msg.type === 'attack') {
-      const target = String(msg.target || '').slice(0, 32);
-      broadcast(room, { type:'attack', playerId:client.id, target, attackId:id() });
+      if (now() - (player.attackAt || 0) < 250) return;
+      player.attackAt = now();
+      let target = null, best = 0.22;
+      for (const other of room.players.values()) {
+        if (other.id === player.id || other.hp <= 0) continue;
+        const d = Math.hypot(other.x - player.x, other.y - player.y);
+        if (d < best) { best = d; target = other; }
+      }
+      if (target) {
+        target.hp = Math.max(0, target.hp - 25);
+        broadcast(room, { type:'player_hit', playerId:player.id, targetId:target.id, hp:target.hp });
+      }
+      broadcast(room, { type:'attack', playerId:client.id, attackId:id() });
     } else if (msg.type === 'ready') {
       player.ready = Boolean(msg.value);
       broadcast(room, { type:'room_update', room:roomView(room) });
