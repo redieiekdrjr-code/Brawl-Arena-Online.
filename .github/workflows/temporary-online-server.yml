@@ -1,0 +1,77 @@
+name: Temporary Online Game Server
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'server.js'
+      - 'package.json'
+      - '.github/workflows/temporary-online-server.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: temporary-online-server
+  cancel-in-progress: true
+jobs:
+  online-server:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install server dependencies
+        run: npm ci
+      - name: Start WebSocket game server
+        run: |
+          PORT=3000 nohup npm start > server.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:3000/health; then
+              break
+            fi
+            sleep 2
+          done
+          curl -fsS http://127.0.0.1:3000/health
+      - name: Install Cloudflare Tunnel
+        run: |
+          curl -fsSL https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o cloudflared
+          chmod +x cloudflared
+      - name: Publish temporary WebSocket address
+        run: |
+          nohup ./cloudflared tunnel --url http://127.0.0.1:3000 --no-autoupdate > tunnel.log 2>&1 &
+          for i in $(seq 1 60); do
+            URL=$(grep -Eo 'https://[a-zA-Z0-9-]+\.trycloudflare\.com' tunnel.log | head -n 1 || true)
+            if [ -n "$URL" ]; then
+              WS_URL=$(echo "$URL" | sed 's#^https://#wss://#')/ws
+              echo "Temporary game server: $WS_URL"
+              {
+                echo "## Brawl Arena Online — temporary server"
+                echo ""
+                echo "**WebSocket address:** `$WS_URL`"
+                echo ""
+                echo "This address is temporary and works only while this GitHub Actions job is running (up to about 1 hour)."
+              } >> "$GITHUB_STEP_SUMMARY"
+              echo "$WS_URL" > online-server-address.txt
+              break
+            fi
+            sleep 2
+          done
+          if [ ! -f online-server-address.txt ]; then
+            cat tunnel.log
+            exit 1
+          fi
+      - name: Keep temporary server alive
+        run: |
+          echo "Server will stay online for up to 55 minutes."
+          sleep 3300
+      - name: Upload server address and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: temporary-online-server-info
+          path: |
+            online-server-address.txt
+            server.log
+            tunnel.log
+          if-no-files-found: ignore
