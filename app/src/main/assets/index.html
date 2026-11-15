@@ -15,7 +15,8 @@
 #stick{width:116px;height:116px;border-radius:50%;background:#d8e7ff33;border:3px solid #d8e7ff99;position:relative;pointer-events:auto;touch-action:none}
 #knob{width:48px;height:48px;border-radius:50%;background:#e8f3ffcc;position:absolute;left:31px;top:31px}
 #superAttack{width:clamp(54px,10vh,70px);height:clamp(54px,10vh,70px);border-radius:50%;border:3px solid #b9f5ff;background:radial-gradient(#75eaff,#2776c6);color:#08284a;font-size:11px;font-weight:1000;pointer-events:auto;touch-action:none;box-shadow:0 4px #174a80;opacity:.48}
-#superAttack.ready{opacity:1;box-shadow:0 4px #174a80,0 0 18px #73edff}\n#attack{width:88px;height:88px;border-radius:50%;border:4px solid #ffe9a1;background:radial-gradient(#ffdb64,#e87827);color:#51220e;font-size:14px;font-weight:1000;pointer-events:auto;touch-action:none;box-shadow:0 5px #8b3c1a}
+#superAttack.ready{opacity:1;box-shadow:0 4px #174a80,0 0 18px #73edff}
+#attack{width:88px;height:88px;border-radius:50%;border:4px solid #ffe9a1;background:radial-gradient(#ffdb64,#e87827);color:#51220e;font-size:14px;font-weight:1000;pointer-events:auto;touch-action:none;box-shadow:0 5px #8b3c1a}
 #matchMessage{position:absolute;left:50%;top:43%;transform:translate(-50%,-50%);font-size:30px;font-weight:1000;text-align:center;text-shadow:0 4px #17264a;pointer-events:none;width:90%}
 #matchMessage small{display:block;font-size:14px;margin-top:8px}
 @media(min-width:700px){#controls{max-width:700px;margin:auto}}
@@ -160,6 +161,24 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.2;bac
 .close{background:linear-gradient(#557db0,#263f6a);border:1px solid #a9c8ef}
 #attack{border-color:#fff4b1;box-shadow:0 5px #8b3c1a,0 0 0 5px #ffffff22}
 #stick{box-shadow:0 0 0 5px #ffffff18,inset 0 0 20px #ffffff22}
+</style><style>
+/* Selectable original Brawl Arena lobby themes */
+body[data-theme="classic"]{background:radial-gradient(ellipse at 50% 48%,#43d9e7 0%,#168acb 42%,#07529d 100%)}
+body[data-theme="neon"]{background:radial-gradient(ellipse at 50% 45%,#b34cff 0%,#5425a4 48%,#160d3b 100%)}
+body[data-theme="lava"]{background:radial-gradient(ellipse at 50% 45%,#ffb13d 0%,#d94c31 48%,#541b35 100%)}
+body[data-theme="forest"]{background:radial-gradient(ellipse at 50% 45%,#68d68a 0%,#167d68 48%,#073d43 100%)}
+body[data-theme="neon"] .logo,body[data-theme="neon"] .wallet .pill{background:linear-gradient(#603c9d,#26194f);border-color:#e1aaff}
+body[data-theme="lava"] .logo,body[data-theme="lava"] .wallet .pill{background:linear-gradient(#9a3c36,#4c1c2b);border-color:#ffd18a}
+body[data-theme="forest"] .logo,body[data-theme="forest"] .wallet .pill{background:linear-gradient(#287e65,#10443e);border-color:#b6f4bd}
+body[data-theme="neon"] .side-menu button{background:linear-gradient(#8c54bd,#382568);border-color:#edc5ff}
+body[data-theme="lava"] .side-menu button{background:linear-gradient(#c65c39,#702b31);border-color:#ffe0a0}
+body[data-theme="forest"] .side-menu button{background:linear-gradient(#399b70,#155447);border-color:#c0f0b8}
+body[data-theme="neon"] .orb{background:radial-gradient(circle at 34% 22%,#fff0ff,#d66aff 40%,#6732b8 78%);border-color:#f4d3ff}
+body[data-theme="lava"] .orb{background:radial-gradient(circle at 34% 22%,#fff0a9,#ff9b35 40%,#b93437 78%);border-color:#ffe0a0}
+body[data-theme="forest"] .orb{background:radial-gradient(circle at 34% 22%,#f0ffb0,#80d96d 40%,#267e64 78%);border-color:#d6ffad}
+body[data-theme="neon"] .primary{background:linear-gradient(#ffe1ff,#d48aff 60%,#8c4cdb);color:#32134f;border-color:#f6d5ff}
+body[data-theme="lava"] .primary{background:linear-gradient(#fff0a0,#ffb13b 60%,#df592e);color:#54200f;border-color:#fff0b0}
+body[data-theme="forest"] .primary{background:linear-gradient(#e4ff9d,#a8e65c 60%,#48b77c);color:#16452e;border-color:#e8ffc1}
 </style></head><body>
 <header class="top"><div class="logo">BRAWL<br>ARENA</div><div class="wallet"><div class="pill">🟡 <span id="coins">1250</span></div><div class="pill">💎 <span id="gems">50</span></div><button id="musicToggle" onclick="toggleMusic()" aria-label="Включить музыку">♫ ВКЛ. МУЗЫКУ</button></div></header>
 <aside class="side-menu left" aria-label="Игровое меню">
@@ -171,6 +190,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.2;bac
 <button onclick="openPanel('friends')"><span>👥</span>ДРУЗЬЯ</button>
 <button onclick="openPanel('club')"><span>🛡️</span>КЛУБ</button>
 <button onclick="openPanel('chat')"><span>💬</span>ЧАТ</button>
+<button onclick="openPanel('themes')"><span>🎨</span>ТЕМЫ</button>
 </aside>
 
 <div class="profile-strip"><div class="profile-avatar">☠</div><div class="profile-progress"><b>SASHA　🏆 45</b><div class="progress-track"><i></i></div></div><div class="profile-level">★</div></div>
@@ -204,7 +224,7 @@ let coins=Number(localStorage.getItem('ba_coins')||1250),gems=Number(localStorag
 const fighters=[{name:'Ranger',icon:'🤠',desc:'Меткий стрелок на средней дистанции',rarity:'ОБЫЧНЫЙ'},{name:'Volt',icon:'⚡',desc:'Быстрый боец с резкими атаками',rarity:'РЕДКИЙ'},{name:'Titan',icon:'🛡️',desc:'Крепкий защитник команды',rarity:'ЭПИЧЕСКИЙ'}];
 const modes=[['💎','ЗАХВАТ КРИСТАЛЛОВ','Собирай кристаллы и удерживай преимущество'],['🏆','СТОЛКНОВЕНИЕ','Сражайся за последнее место на арене'],['⚽','БРОУЛБОЛ','Забей два гола и победи']];
 function sync(){document.getElementById('coins').textContent=coins;document.getElementById('gems').textContent=gems;let f=fighters.find(x=>x.name===selected)||fighters[0];document.getElementById('heroIcon').textContent=f.icon;document.getElementById('heroName').textContent=f.name.toUpperCase()+' · РАНГ 1';localStorage.setItem('ba_coins',coins);localStorage.setItem('ba_gems',gems);localStorage.setItem('ba_fighter',selected)}
-function openPanel(k){let title={fighters:'ВЫБОР БОЙЦА',shop:'МАГАЗИН',profile:'ПРОФИЛЬ',modes:'ВЫБЕРИ РЕЖИМ',news:'НОВОСТИ',friends:'ДРУЗЬЯ',club:'КЛУБ',chat:'ЧАТ'}[k];document.getElementById('ptitle').textContent=title;let html='';
+function openPanel(k){let title={fighters:'ВЫБОР БОЙЦА',shop:'МАГАЗИН',profile:'ПРОФИЛЬ',modes:'ВЫБЕРИ РЕЖИМ',news:'НОВОСТИ',friends:'ДРУЗЬЯ',club:'КЛУБ',chat:'ЧАТ',themes:'ТЕМЫ МЕНЮ'}[k];document.getElementById('ptitle').textContent=title;let html='';
 if(k==='fighters')html=fighters.map(f=>'<div class="item">'+f.icon+' '+f.name+' <span class="tag">'+f.rarity+'</span><small>'+f.desc+'</small><button class="action" onclick="choose(\''+f.name+'\')">'+(selected===f.name?'ВЫБРАН':'ВЫБРАТЬ')+'</button><div style="clear:both"></div></div>').join('');
 if(k==='modes')html=modes.map((m,i)=>'<div class="item mode" onclick="startMatch('+i+')" style="cursor:pointer"><span>'+m[0]+'</span><div><b>'+m[1]+'</b><small>'+m[2]+'</small></div><button class="action">БОТЫ</button><div style="clear:both"></div></div>').join('')+'<div class="item"><b>🌐 СЕТЕВАЯ ИГРА</b><small>Создай комнату или введи код друга. Все участники должны подключиться к одному серверу.</small><input id="serverAddress" value="'+escapeHtml(localStorage.getItem('ba_server')||'')+'" placeholder="wss://адрес-сервера/ws" style="width:100%;margin:10px 0;padding:11px;border-radius:8px;border:1px solid #8aa6d5;background:#0d1934;color:white"><input id="roomCode" placeholder="КОД КОМНАТЫ (если присоед.)" maxlength="6" style="width:100%;padding:11px;border-radius:8px;border:1px solid #8aa6d5;background:#0d1934;color:white"><button class="action" style="float:none;width:100%;margin-top:9px" onclick="connectOnline(true)">СОЗДАТЬ КОМНАТУ</button><button class="action" style="float:none;width:100%;margin-top:8px" onclick="connectOnline(false)">ПРИСОЕДИНИТЬСЯ</button><div id="onlineStatus" class="muted" style="margin-top:9px">Сервер ещё не указан.</div></div>';
 if(k==='shop')html='<div class="item">🎁 ЕЖЕДНЕВНЫЙ ПОДАРОК<small>Забери бесплатные монеты один раз в тестовой версии.</small><button class="action" onclick="gift()">ЗАБРАТЬ +100</button><div style="clear:both"></div></div><div class="item">💎 КРИСТАЛЛЫ<small>Демо-баланс: '+gems+' кристаллов. Покупки пока отключены.</small></div><div class="item">🎨 СКИНЫ<small>Коллекция обликов появится в следующем обновлении.</small></div>';
@@ -212,8 +232,13 @@ if(k==='news')html='<div class="item">📢 НОВОСТИ АРЕНЫ<small>До�
 if(k==='friends')html='<div class="item">👥 ДРУЗЬЯ<small>Список друзей пока пуст. Онлайн-приглашения добавим после подключения аккаунтов.</small></div>';
 if(k==='club')html='<div class="item">🛡️ КЛУБ<small>Создание клуба будет доступно в следующем обновлении.</small></div>';
 if(k==='chat')html='<div class="item">💬 ЧАТ<small>Чат пока недоступен в этой тестовой версии.</small></div>';
+if(k==='themes')html='<div class="item"><b>🎨 ВЫБЕРИ ОФОРМЛЕНИЕ</b><small>Тема применяется сразу и сохраняется на устройстве.</small></div>'+themeList.map(t=>'<div class="item theme-choice" style="border-color:'+(currentTheme===t.id?'#ffe16b':'#7197c9')+'"><b>'+t.label+'</b><small>'+t.desc+'</small><button class="action" onclick="setTheme(&quot;'+t.id+'&quot;)">'+(currentTheme===t.id?'ВЫБРАНА':'ПРИМЕНИТЬ')+'</button><div style="clear:both"></div></div>').join('');
 if(k==='profile')html='<div class="item">👤 ИГРОК: SASHA</div><div class="item">🏆 ПОБЕДЫ: '+wins+'</div><div class="item">🎖️ ТРОФЕИ: '+trophies+'</div><div class="item">⭐ УРОВЕНЬ: 1</div><div class="item">🪙 МОНЕТЫ: '+coins+' · 💎 КРИСТАЛЛЫ: '+gems+'</div>';
 document.getElementById('pbody').innerHTML=html;document.getElementById('panel').style.display='block'}
+const themeList=[{id:'classic',label:'🌊 КЛАССИЧЕСКАЯ',desc:'Сине-голубая арена'},{id:'neon',label:'💜 НЕОНОВАЯ',desc:'Фиолетовый свет и контраст'},{id:'lava',label:'🔥 ОГНЕННАЯ',desc:'Тёплые красно-золотые цвета'},{id:'forest',label:'🌿 ЛЕСНАЯ',desc:'Изумрудные оттенки'}];
+let currentTheme=localStorage.getItem('ba_theme')||'classic';
+function setTheme(name){if(!themeList.some(t=>t.id===name))return;currentTheme=name;localStorage.setItem('ba_theme',name);applyTheme();openPanel('themes')}
+function applyTheme(){document.body.dataset.theme=currentTheme}
 function choose(n){selected=n;sync();openPanel('fighters')}
 function gift(){if(localStorage.getItem('ba_gift_day')===new Date().toDateString()){alert('Подарок уже получен сегодня!');return}coins+=100;localStorage.setItem('ba_gift_day',new Date().toDateString());sync();openPanel('shop')}
 function closePanel(){document.getElementById('panel').style.display='none'}
@@ -286,5 +311,6 @@ function connectOnline(create){
  }catch(e){if(status)status.textContent='Ошибка подключения: '+e.message}
 }
 
+applyTheme();
 sync();
 </script></body></html>
