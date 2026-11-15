@@ -62,7 +62,7 @@ export class GameRoom {
       const player = { id, name, fighter, x: 0.5, y: 0.5, hp: 100, ready: false, facing: 0 };
       const current = this.ctx.getWebSockets().length;
       if (current >= MAX_PLAYERS) return new Response("Room is full", { status: 409 });
-      server.accept();
+      this.ctx.acceptWebSocket(server);
       server.serializeAttachment(player);
       server.send(JSON.stringify({ type: "joined_room", room: this.roomView([...this.ctx.getWebSockets(), server]), you: id }));
       this.broadcast({ type: "room_update", room: this.roomView(this.ctx.getWebSockets()) });
