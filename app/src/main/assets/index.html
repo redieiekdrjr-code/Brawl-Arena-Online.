@@ -93,6 +93,48 @@
  .profile-strip,.rank-badge,.bottom-pass,.event-card{display:none}
 }
 </style>
+
+<style>
+/* Forced-landscape game presentation */
+@media (orientation:landscape){
+ html,body{width:100%;height:100%;min-height:100%;overflow:hidden}
+ body{padding:0}
+ .top{position:absolute;top:0;left:0;right:0;z-index:7}
+ .side-menu{display:flex}
+ .nav,.quick,.hint{display:none!important}
+ .panel{overflow-y:auto}
+ #arena{width:100vw;height:100dvh;inset:0}
+ #gameCanvas{width:100vw;height:100dvh}
+ #controls{left:0;right:0;bottom:max(12px,env(safe-area-inset-bottom));padding:0 clamp(18px,4vw,56px)}
+ #stick{width:clamp(76px,16vh,116px);height:clamp(76px,16vh,116px)}
+ #knob{left:50%;top:50%;transform:translate(-50%,-50%)}
+ #attack{width:clamp(66px,13vh,88px);height:clamp(66px,13vh,88px)}
+ .hud{top:max(8px,env(safe-area-inset-top));left:12px;right:12px}
+ .panel h2{margin:22px 0 16px}
+ #pbody{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ #pbody .item{margin:0;min-width:0}
+}
+@media (orientation:landscape) and (max-height:430px){
+ .top{padding:5px 10px}
+ .logo{font-size:13px;padding:5px}
+ .pill{padding:4px 7px;font-size:12px}
+ .profile-strip{height:43px;top:5px}
+ .profile-avatar{width:30px;height:30px;font-size:19px}
+ .rank-badge{top:10%;padding:2px 9px}
+ .side-menu{top:32%;bottom:25%;gap:4px}
+ .side-menu button{min-height:38px;padding:3px 2px;font-size:10px}
+ .side-menu button span{font-size:18px}
+ .bottom-pass,.event-card{height:16%;min-height:48px;padding:4px 7px}
+ .pass-progress{height:18px;font-size:10px}
+ .primary{height:16%;font-size:clamp(16px,2.6vw,25px)}
+ .orb{width:min(37vh,31vw);height:min(37vh,31vw);font-size:min(21vh,18vw)}
+ .fighter-name{font-size:11px}
+}
+@media (orientation:portrait){
+ body:after{content:"ПОВЕРНИ ТЕЛЕФОН ГОРИЗОНТАЛЬНО";position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:#101a3b;color:#fff;font-weight:1000;letter-spacing:1px;text-align:center;padding:30px}
+}
+</style>
+
 </head><body>
 <header class="top"><div class="logo">BRAWL<br>ARENA</div><div class="wallet"><div class="pill">🟡 <span id="coins">1250</span></div><div class="pill">💎 <span id="gems">50</span></div><button id="musicToggle" onclick="toggleMusic()" aria-label="Включить музыку">♫ ВКЛ. МУЗЫКУ</button></div></header>
 <aside class="side-menu left" aria-label="Игровое меню">
