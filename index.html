@@ -1,39 +1,93 @@
 <!doctype html>
-<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="theme-color" content="#101a35"><title>BRAWL ARENA</title>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#101a35"><title>SABLOX BRAWL — Arena</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101a35;color:white;font-family:Arial,sans-serif;touch-action:none}#app{height:100dvh;display:flex;flex-direction:column;background:radial-gradient(ellipse at 50% 0,#263d68,#101a35 70%)}header{height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:#17284b;border-bottom:3px solid #0b1429;font-weight:900;letter-spacing:1px}header b{color:#ffdc45;font-size:22px;text-shadow:2px 2px #9b4b20}#hud{display:flex;gap:12px;font-size:13px}main{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:8px;position:relative}canvas{width:min(100%,900px);height:100%;max-height:620px;object-fit:contain;border:4px solid #0b1429;border-radius:14px;background:#6fb64c;box-shadow:0 8px 28px #0008}#menu{position:absolute;inset:8px;display:flex;align-items:center;justify-content:center;background:#071329bd;border-radius:12px}#panel{width:min(92%,390px);background:linear-gradient(#31568b,#1b2e56);border:4px solid #10213f;border-radius:18px;padding:20px;text-align:center;box-shadow:0 8px #09152a}h1{margin:0 0 4px;color:#ffdf4b;font-size:34px;text-shadow:3px 3px #9b4b20}#panel p{color:#dceaff;font-size:14px}button,select{font-weight:900;border:0;border-radius:12px;padding:13px 18px;color:#fff;background:linear-gradient(#ffca45,#f18a22);box-shadow:0 5px #9a4b18;font-size:16px;margin:5px}button:active{transform:translateY(3px);box-shadow:0 2px #9a4b18}select{background:#18345e;border:2px solid #6688ba;box-shadow:none;width:100%;margin:8px 0}.small{font-size:12px;color:#a9c3e9}#controls{height:116px;display:flex;align-items:center;justify-content:space-between;padding:8px 24px 14px;background:linear-gradient(#17284b,#0c1730)}.pad{width:92px;height:92px;border-radius:50%;background:#ffffff20;border:3px solid #ffffff55;position:relative}.stick{position:absolute;width:40px;height:40px;border-radius:50%;background:#d9e8ffbb;left:23px;top:23px;pointer-events:none}.actions{display:flex;gap:12px;align-items:center}.act{width:72px;height:72px;border-radius:50%;background:linear-gradient(#ffdf54,#f28a20);border:4px solid #a34c17;box-shadow:0 5px #6c3414;font-size:24px}.act.super{background:linear-gradient(#d77bff,#7536c5);border-color:#4a247d}.hidden{display:none!important}@media(min-width:750px){#controls{height:90px}.pad{width:70px;height:70px}.stick{left:13px;top:13px} .act{width:60px;height:60px}}
-</style></head><body><div id="app"><header><b>★ BRAWL ARENA</b><div id="hud"><span>🏆 <span id="wins">0</span></span><span>💎 <span id="gems">0</span></span><span>❤️ <span id="hp">100</span></span></div></header><main><canvas id="game" width="900" height="600"></canvas><div id="menu"><div id="panel"><h1>BRAWL ARENA</h1><p>Сражайся, собирай усиления и побеждай!</p><label>ТВОЙ БОЕЦ</label><select id="hero"><option value="shelly">Шелли · дробовик</option><option value="colt">Кольт · скорострел</option><option value="bull">Булл · танк</option></select><label>РЕЖИМ</label><select id="mode"><option value="showdown">Столкновение · выживание</option><option value="gem">Кристаллы · собери 10</option></select><button id="start">ИГРАТЬ ▶</button><p class="small">Управление: левый джойстик · кнопка ⚡ атака · ✦ супер</p></div></div></main><div id="controls"><div class="pad" id="pad"><div class="stick" id="stick"></div></div><div class="actions"><button class="act" id="fire">⚡</button><button class="act super" id="super">✦</button></div></div></div>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101a35;color:#fff;font-family:Arial,sans-serif;touch-action:none}
+#app{height:100dvh;display:flex;flex-direction:column;background:radial-gradient(ellipse at 50% 0,#263d68,#101a35 70%)}
+header{height:52px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:#17284b;border-bottom:3px solid #0b1429;font-weight:900}
+header b{color:#ffdc45;font-size:20px;text-shadow:2px 2px #9b4b20}#hud{display:flex;gap:10px;font-size:13px}
+main{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:6px;position:relative}
+canvas{display:block;width:min(100%,900px,calc((100dvh - 180px)*1.5));height:auto;max-height:100%;aspect-ratio:3/2;border:4px solid #0b1429;border-radius:13px;background:#6fb64c;box-shadow:0 8px 28px #0008}
+#menu{position:absolute;inset:6px;display:flex;align-items:center;justify-content:center;background:#071329bd;border-radius:12px}
+#panel{width:min(92%,390px);background:linear-gradient(#31568b,#1b2e56);border:4px solid #10213f;border-radius:18px;padding:18px;text-align:center;box-shadow:0 8px #09152a}
+h1{margin:0 0 4px;color:#ffdf4b;font-size:32px;text-shadow:3px 3px #9b4b20}#panel p{color:#dceaff;font-size:14px}
+button,select{font-weight:900;border:0;border-radius:12px;padding:12px 16px;color:#fff;background:linear-gradient(#ffca45,#f18a22);box-shadow:0 5px #9a4b18;font-size:16px;margin:5px}
+button:active{transform:translateY(3px);box-shadow:0 2px #9a4b18}select{background:#18345e;border:2px solid #6688ba;box-shadow:none;width:100%;margin:7px 0}
+.small{font-size:12px;color:#a9c3e9}#controls{height:112px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:7px 22px 12px;background:linear-gradient(#17284b,#0c1730)}
+.pad{width:88px;height:88px;border-radius:50%;background:#ffffff20;border:3px solid #ffffff55;position:relative}.stick{position:absolute;width:38px;height:38px;border-radius:50%;background:#d9e8ffbb;left:22px;top:22px;pointer-events:none}
+.actions{display:flex;gap:12px;align-items:center}.act{width:70px;height:70px;border-radius:50%;background:linear-gradient(#ffdf54,#f28a20);border:4px solid #a34c17;box-shadow:0 5px #6c3414;font-size:23px}.act.super{background:linear-gradient(#d77bff,#7536c5);border-color:#4a247d;opacity:.55}.act.ready{opacity:1;filter:drop-shadow(0 0 9px #e6aaff)}
+.hidden{display:none!important}
+@media(min-width:750px){#controls{height:88px}.pad{width:68px;height:68px}.stick{left:12px;top:12px}.act{width:58px;height:58px}}
+</style></head>
+<body><div id="app">
+<header><b>★ SABLOX BRAWL</b><div id="hud"><span>🏆 <span id="wins">0</span></span><span>💎 <span id="gems">0</span></span><span>❤️ <span id="hp">100</span></span></div></header>
+<main><canvas id="game" width="900" height="600"></canvas><div id="menu"><div id="panel">
+<h1>SABLOX BRAWL</h1><p>Выбирай бойца и выходи на арену!</p>
+<label>ТВОЙ БОЕЦ</label><select id="hero"><option value="shelly">Шелли · дробовик</option><option value="colt">Кольт · дальняя атака</option><option value="bull">Булл · тяжёлый боец</option><option value="nita">Нита · быстрый боец</option></select>
+<label>РЕЖИМ</label><select id="mode"><option value="showdown">Столкновение · выживание</option><option value="gem">Кристаллы · собери 10</option></select>
+<button id="start">ИГРАТЬ ▶</button><p class="small">Левый джойстик — движение · ⚡ атака · ✦ супер</p></div></div></main>
+<div id="controls"><div class="pad" id="pad"><div class="stick" id="stick"></div></div><div class="actions"><button class="act" id="fire">⚡</button><button class="act super" id="super">✦</button></div></div>
+</div>
 <script>
-(()=>{const c=document.getElementById('game'),x=c.getContext('2d'),W=900,H=600;let player,bots=[],shots=[],gems=[],walls=[],running=false,mode='showdown',kills=0,score=0,wins=+(localStorage.brawlWins||0),last=0,fire=false,joy={x:0,y:0},superReady=true,frame=0;
-const $=id=>document.getElementById(id);$('wins').textContent=wins;
+(()=> {
+const c=document.getElementById('game'),ctx=c.getContext('2d'),W=900,H=600,$=id=>document.getElementById(id);
+let player=null,bots=[],shots=[],gems=[],walls=[],running=false,mode='showdown',kills=0,score=0,wins=+(localStorage.sabloxWins||0),frame=0,fire=false,joy={x:0,y:0},superCharge=0;
+$('wins').textContent=wins;
 const rand=(a,b)=>a+Math.random()*(b-a),dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-function arena(){walls=[{x:140,y:120,w:130,h:48},{x:370,y:70,w:70,h:120},{x:620,y:130,w:130,h:48},{x:190,y:360,w:80,h:120},{x:420,y:420,w:130,h:50},{x:680,y:350,w:75,h:120},{x:390,y:250,w:120,h:55}];}
-function start(){mode=$('mode').value;let type=$('hero').value;player={x:450,y:300,r:type==='bull'?23:19,hp:type==='bull'?145:100,max:type==='bull'?145:100,speed:type==='bull'?2.5:3.1,type,ammo:3,hit:0,angle:0};bots=[];shots=[];gems=[];kills=0;score=0;superReady=true;arena();for(let i=0;i<7;i++)bots.push({x:rand(60,840),y:rand(60,540),r:19,hp:90,max:90,speed:rand(1.05,1.55),cool:rand(20,100),angle:0,team:i%2});for(let i=0;i<7;i++)gems.push({x:rand(50,850),y:rand(50,550),r:9});running=true;$('menu').classList.add('hidden');$('hp').textContent=player.hp;}
+function arena(){walls=[{x:125,y:110,w:145,h:48},{x:365,y:65,w:70,h:125},{x:630,y:115,w:145,h:48},{x:180,y:355,w:82,h:125},{x:405,y:425,w:130,h:50},{x:680,y:350,w:75,h:125},{x:385,y:250,w:130,h:55}];}
+function start(){
+mode=$('mode').value;const type=$('hero').value,stats={shelly:[100,3.1],colt:[90,3.35],bull:[150,2.55],nita:[110,3.0]}[type];
+player={x:450,y:300,r:type==='bull'?23:19,hp:stats[0],max:stats[0],speed:stats[1],type,hit:0,angle:0};
+bots=[];shots=[];gems=[];kills=0;score=0;superCharge=0;frame=0;arena();
+for(let i=0;i<7;i++){let p;do{p={x:rand(55,845),y:rand(55,545),r:19,hp:95,max:95,speed:rand(1.05,1.5),cool:rand(25,90),angle:0};}while(dist(p,player)<180);bots.push(p);}
+for(let i=0;i<8;i++)gems.push({x:rand(45,855),y:rand(45,555),r:9});
+$('gems').textContent='0';$('hp').textContent=player.hp;$('super').classList.remove('ready');$('menu').classList.add('hidden');running=true;
+}
 $('start').onclick=start;
-function circle(a,color){x.fillStyle=color;x.beginPath();x.arc(a.x,a.y,a.r,0,Math.PI*2);x.fill();x.lineWidth=4;x.strokeStyle='#17314b';x.stroke();x.fillStyle='#fff';x.beginPath();x.arc(a.x-5,a.y-4,3,0,7);x.arc(a.x+6,a.y-4,3,0,7);x.fill();x.fillStyle='#17243a';x.fillRect(a.x-a.r,a.y-a.r-12,a.r*2,5);x.fillStyle='#65e35d';x.fillRect(a.x-a.r,a.y-a.r-12,a.r*2* Math.max(0,a.hp/a.max),5);}
 function blocked(a,nx,ny){if(nx<a.r||nx>W-a.r||ny<a.r||ny>H-a.r)return true;return walls.some(w=>nx+a.r>w.x&&nx-a.r<w.x+w.w&&ny+a.r>w.y&&ny-a.r<w.y+w.h);}
 function move(a,dx,dy){let nx=a.x+dx,ny=a.y+dy;if(!blocked(a,nx,a.y))a.x=nx;if(!blocked(a,a.x,ny))a.y=ny;}
-function shoot(a,target,power=1){let ang=Math.atan2(target.y-a.y,target.x-a.x);let count=a===player&&player.type==='shelly'?5:1;for(let i=0;i<count;i++){let spread=(i-(count-1)/2)*.12;shots.push({x:a.x+Math.cos(ang)*a.r,y:a.y+Math.sin(ang)*a.r,vx:Math.cos(ang+spread)*(a===player?8:5),vy:Math.sin(ang+spread)*(a===player?8:5),life:65,owner:a,damage:(a===player?(player.type==='bull'?22:18):10)*power});}}
-function attack(){if(!running||!player||player.hit>0)return;let target=bots.reduce((best,b)=>b.hp>0&&(!best||dist(player,b)<dist(player,best))?b:best,null);if(target){shoot(player,target);player.hit=player.type==='colt'?9:18;}}
-$('fire').addEventListener('pointerdown',e=>{e.preventDefault();fire=true;attack()});['pointerup','pointercancel','pointerleave'].forEach(ev=>$('fire').addEventListener(ev,()=>fire=false));
-$('super').addEventListener('pointerdown',e=>{e.preventDefault();if(running&&superReady){superReady=false;let near=bots.filter(b=>b.hp>0&&dist(player,b)<210);near.forEach(b=>{b.hp-=55;if(b.hp<=0)drop(b)});player.hp=Math.min(player.max,player.hp+25);}});
-function drop(b){kills++;gems.push({x:b.x,y:b.y,r:9});}
-let active=false;function setJoy(e){let r=$('pad').getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,len=Math.hypot(dx,dy),m=Math.min(1,len/(r.width*.35));joy.x=len?dx/len*m:0;joy.y=len?dy/len*m:0;$('stick').style.transform='translate('+joy.x*25+'px,'+joy.y*25+'px)';}
-$('pad').addEventListener('pointerdown',e=>{active=true;$('pad').setPointerCapture(e.pointerId);setJoy(e)});$('pad').addEventListener('pointermove',e=>{if(active)setJoy(e)});['pointerup','pointercancel'].forEach(ev=>$('pad').addEventListener(ev,()=>{active=false;joy={x:0,y:0};$('stick').style.transform='translate(0,0)'}));
-function update(){if(!running)return;frame++;if(player.hit>0)player.hit--;move(player,joy.x*player.speed,joy.y*player.speed);if(fire&&frame%9===0)attack();
-bots.forEach(b=>{if(b.hp<=0)return;let d=dist(b,player),ang=Math.atan2(player.y-b.y,player.x-b.x);b.angle=ang;if(d>150)move(b,Math.cos(ang)*b.speed,Math.sin(ang)*b.speed);else if(d<95)move(b,-Math.cos(ang)*b.speed,-Math.sin(ang)*b.speed);b.cool--;if(b.cool<=0&&d<440){shoot(b,player);b.cool=rand(65,115);}});
-shots=shots.filter(s=>{s.x+=s.vx;s.y+=s.vy;s.life--;if(s.life<=0||s.x<0||s.x>W||s.y<0||s.y>H||walls.some(w=>s.x>w.x&&s.x<w.x+w.w&&s.y>w.y&&s.y<w.y+w.h))return false;if(s.owner===player){let b=bots.find(b=>b.hp>0&&dist(s,b)<b.r+5);if(b){b.hp-=s.damage;if(b.hp<=0)drop(b);return false;}}else if(dist(s,player)<player.r+6){player.hp-=s.damage;$('hp').textContent=Math.max(0,Math.ceil(player.hp));return false;}return true;});
-gems=gems.filter(g=>{if(dist(g,player)<player.r+g.r){score++;$('gems').textContent=score;if(mode==='gem'&&score>=10){finish(true);}return false;}return true;});
-if(player.hp<=0)finish(false);if(mode==='showdown'&&bots.every(b=>b.hp<=0))finish(true);if(mode==='gem'&&bots.every(b=>b.hp<=0)&&score<10)finish(true);
+function shoot(a,target,power=1){
+let ang=Math.atan2(target.y-a.y,target.x-a.x);a.angle=ang;
+let count=a===player&&player.type==='shelly'?5:1,spread=player&&player.type==='colt'&&a===player?0.025:.12;
+for(let i=0;i<count;i++){let off=(i-(count-1)/2)*spread;shots.push({x:a.x+Math.cos(ang)*a.r,y:a.y+Math.sin(ang)*a.r,vx:Math.cos(ang+off)*(a===player?9:5),vy:Math.sin(ang+off)*(a===player?9:5),life:65,owner:a,damage:(a===player?(player.type==='bull'?24:player.type==='colt'?17:19):10)*power});}
 }
-function finish(win){running=false;if(win){wins++;localStorage.brawlWins=wins;$('wins').textContent=wins;}$('panel').innerHTML='<h1>'+(win?'ПОБЕДА! 🏆':'ПОРАЖЕНИЕ')+'</h1><p>Уничтожено противников: '+kills+'<br>Собрано кристаллов: '+score+'</p><button id="again">ЕЩЁ БОЙ ▶</button><p class="small">BRAWL ARENA · тренировочная приватка</p>';$('menu').classList.remove('hidden');$('again').onclick=()=>{ $('panel').innerHTML='<h1>BRAWL ARENA</h1><p>Сражайся и побеждай!</p><label>ТВОЙ БОЕЦ</label><select id="hero"><option value="shelly">Шелли · дробовик</option><option value="colt">Кольт · скорострел</option><option value="bull">Булл · танк</option></select><label>РЕЖИМ</label><select id="mode"><option value="showdown">Столкновение · выживание</option><option value="gem">Кристаллы · собери 10</option></select><button id="start">ИГРАТЬ ▶</button><p class="small">Левый джойстик · ⚡ атака · ✦ супер</p>';$('start').onclick=start;};}
-function draw(){x.clearRect(0,0,W,H);x.fillStyle='#76bd55';x.fillRect(0,0,W,H);x.strokeStyle='#5ca348';x.lineWidth=2;for(let i=0;i<900;i+=45){x.beginPath();x.moveTo(i,0);x.lineTo(i,H);x.stroke();}for(let j=0;j<600;j+=45){x.beginPath();x.moveTo(0,j);x.lineTo(W,j);x.stroke();}
-walls.forEach(w=>{x.fillStyle='#b77b4b';x.fillRect(w.x,w.y,w.w,w.h);x.fillStyle='#d99b62';x.fillRect(w.x+5,w.y+5,w.w-10,w.h-10);x.strokeStyle='#75472f';x.lineWidth=5;x.strokeRect(w.x,w.y,w.w,w.h);});
-gems.forEach(g=>{x.fillStyle='#6ef6ff';x.beginPath();x.moveTo(g.x,g.y-g.r);x.lineTo(g.x+g.r,g.y);x.lineTo(g.x,g.y+g.r);x.lineTo(g.x-g.r,g.y);x.closePath();x.fill();x.strokeStyle='#fff';x.lineWidth=2;x.stroke();});
-bots.forEach(b=>{if(b.hp>0)circle(b,b.team?'#e95a4c':'#9d6be8')});if(player)circle(player,player.type==='bull'?'#e9a43c':player.type==='colt'?'#398be9':'#ed6aab');
-shots.forEach(s=>{x.fillStyle=s.owner===player?'#ffe75c':'#ff9b62';x.beginPath();x.arc(s.x,s.y,6,0,7);x.fill();});
-if(running){x.fillStyle='#10233c';x.font='bold 18px Arial';x.fillText(mode==='gem'?'СОБЕРИ 10 КРИСТАЛЛОВ':'ПОСЛЕДНИЙ В ЖИВЫХ',20,30);x.fillText('Враги: '+bots.filter(b=>b.hp>0).length,20,55);}
+function nearestBot(){return bots.reduce((best,b)=>b.hp>0&&(!best||dist(player,b)<dist(player,best))?b:best,null);}
+function attack(){if(!running||player.hit>0)return;let target=nearestBot();if(target){shoot(player,target);player.hit=player.type==='colt'?8:17;}}
+$('fire').addEventListener('pointerdown',e=>{e.preventDefault();fire=true;attack();});['pointerup','pointercancel','pointerleave'].forEach(ev=>$('fire').addEventListener(ev,()=>fire=false));
+$('super').addEventListener('pointerdown',e=>{e.preventDefault();if(!running||superCharge<100)return;superCharge=0;bots.filter(b=>b.hp>0&&dist(player,b)<220).forEach(b=>damageBot(b,48));player.hp=Math.min(player.max,player.hp+28);$('super').classList.remove('ready');});
+function damageBot(b,amount){b.hp-=amount;superCharge=Math.min(100,superCharge+amount*.35);if(b.hp<=0){kills++;gems.push({x:b.x,y:b.y,r:9});}}
+let active=false;
+function setJoy(e){let r=$('pad').getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),len=Math.hypot(dx,dy),m=Math.min(1,len/(r.width*.35));joy.x=len?dx/len*m:0;joy.y=len?dy/len*m:0;$('stick').style.transform='translate('+joy.x*25+'px,'+joy.y*25+'px)';}
+$('pad').addEventListener('pointerdown',e=>{active=true;$('pad').setPointerCapture(e.pointerId);setJoy(e);});$('pad').addEventListener('pointermove',e=>{if(active)setJoy(e);});
+['pointerup','pointercancel'].forEach(ev=>$('pad').addEventListener(ev,()=>{active=false;joy={x:0,y:0};$('stick').style.transform='translate(0,0)';}));
+function finish(win){running=false;if(win){wins++;localStorage.sabloxWins=wins;$('wins').textContent=wins;}
+$('panel').innerHTML='<h1>'+(win?'ПОБЕДА! 🏆':'ПОРАЖЕНИЕ')+'</h1><p>Уничтожено противников: '+kills+'<br>Собрано кристаллов: '+score+'</p><button id="again">ЕЩЁ БОЙ ▶</button><p class="small">SABLOX BRAWL · тренировочная арена</p>';
+$('menu').classList.remove('hidden');$('again').onclick=()=>{location.reload();};
 }
-function loop(t){update();draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
+function update(){
+if(!running)return;frame++;if(player.hit>0)player.hit--;move(player,joy.x*player.speed,joy.y*player.speed);if(fire&&frame%9===0)attack();
+bots.forEach(b=>{if(b.hp<=0)return;let d=dist(b,player),ang=Math.atan2(player.y-b.y,player.x-b.x);b.angle=ang;if(d>155)move(b,Math.cos(ang)*b.speed,Math.sin(ang)*b.speed);else if(d<100)move(b,-Math.cos(ang)*b.speed,-Math.sin(ang)*b.speed);b.cool--;if(b.cool<=0&&d<430){shoot(b,player);b.cool=rand(65,115);}});
+shots=shots.filter(s=>{s.x+=s.vx;s.y+=s.vy;s.life--;if(s.life<=0||s.x<0||s.x>W||s.y<0||s.y>H||walls.some(w=>s.x>w.x&&s.x<w.x+w.w&&s.y>w.y&&s.y<w.y+w.h))return false;
+if(s.owner===player){let b=bots.find(b=>b.hp>0&&dist(s,b)<b.r+6);if(b){damageBot(b,s.damage);return false;}}
+else if(dist(s,player)<player.r+6){player.hp-=s.damage;$('hp').textContent=Math.max(0,Math.ceil(player.hp));return false;}return true;});
+gems=gems.filter(g=>{if(dist(g,player)<player.r+g.r){score++;$('gems').textContent=score;if(mode==='gem'&&score>=10)finish(true);return false;}return true;});
+if(player.hp<=0)finish(false);
+if(mode==='showdown'&&bots.every(b=>b.hp<=0))finish(true);
+if(mode==='gem'&&bots.every(b=>b.hp<=0)&&gems.length===0&&score<10)finish(false);
+if(superCharge>=100)$('super').classList.add('ready');
+}
+function circle(a,color){ctx.fillStyle=color;ctx.beginPath();ctx.arc(a.x,a.y,a.r,0,Math.PI*2);ctx.fill();ctx.lineWidth=4;ctx.strokeStyle='#17314b';ctx.stroke();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(a.x-5,a.y-4,3,0,7);ctx.arc(a.x+6,a.y-4,3,0,7);ctx.fill();ctx.fillStyle='#17243a';ctx.fillRect(a.x-a.r,a.y-a.r-12,a.r*2,5);ctx.fillStyle='#65e35d';ctx.fillRect(a.x-a.r,a.y-a.r-12,a.r*2*Math.max(0,a.hp/a.max),5);}
+function draw(){
+ctx.clearRect(0,0,W,H);ctx.fillStyle='#76bd55';ctx.fillRect(0,0,W,H);ctx.strokeStyle='#65ad4e';ctx.lineWidth=2;
+for(let i=0;i<W;i+=45){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,H);ctx.stroke();}for(let j=0;j<H;j+=45){ctx.beginPath();ctx.moveTo(0,j);ctx.lineTo(W,j);ctx.stroke();}
+walls.forEach(w=>{ctx.fillStyle='#9a633e';ctx.fillRect(w.x,w.y,w.w,w.h);ctx.fillStyle='#d99b62';ctx.fillRect(w.x+5,w.y+5,w.w-10,w.h-10);ctx.strokeStyle='#75472f';ctx.lineWidth=5;ctx.strokeRect(w.x,w.y,w.w,w.h);});
+gems.forEach(g=>{ctx.fillStyle='#6ef6ff';ctx.beginPath();ctx.moveTo(g.x,g.y-g.r);ctx.lineTo(g.x+g.r,g.y);ctx.lineTo(g.x,g.y+g.r);ctx.lineTo(g.x-g.r,g.y);ctx.closePath();ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();});
+bots.forEach(b=>{if(b.hp>0)circle(b,'#e95a4c');});if(player)circle(player,player.type==='bull'?'#e9a43c':player.type==='colt'?'#398be9':player.type==='nita'?'#9b6be8':'#ed6aab');
+shots.forEach(s=>{ctx.fillStyle=s.owner===player?'#ffe75c':'#ff9b62';ctx.beginPath();ctx.arc(s.x,s.y,6,0,7);ctx.fill();});
+if(running){ctx.fillStyle='#10233c';ctx.font='bold 18px Arial';ctx.fillText(mode==='gem'?'СОБЕРИ 10 КРИСТАЛЛОВ':'ПОСЛЕДНИЙ В ЖИВЫХ',20,30);ctx.fillText('Враги: '+bots.filter(b=>b.hp>0).length,20,55);ctx.fillStyle='#17284b';ctx.fillRect(20,68,130,10);ctx.fillStyle='#d77bff';ctx.fillRect(20,68,130*superCharge/100,10);ctx.strokeStyle='#fff';ctx.strokeRect(20,68,130,10);}
+}
+function loop(){update();draw();requestAnimationFrame(loop);}requestAnimationFrame(loop);
 })();
 </script></body></html>
