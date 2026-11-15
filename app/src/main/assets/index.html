@@ -24,8 +24,49 @@
 <div class="hud"><div class="hudbox"><div id="modeLabel">СТОЛКНОВЕНИЕ</div><div>❤️ <span id="hpText">100</span></div><div id="healthOuter"><div id="healthFill"></div></div></div><div class="hudbox">⏱ <span id="timer">02:00</span><br>⭐ <span id="score">0</span></div><button id="leaveGame" onclick="endMatch(false,true)">ВЫЙТИ</button></div>
 <div id="matchMessage"></div>
 <div id="controls"><div id="stick"><div id="knob"></div></div><button id="attack">АТАКА<br>●</button></div>
-</div></head><body>
-<header class="top"><div class="logo">BRAWL<br>ARENA</div><div class="wallet"><div class="pill">🟡 <span id="coins">1250</span></div><div class="pill">💎 <span id="gems">50</span></div></div></header>
+</div><style>
+/* Landscape lobby inspired by the supplied Brawl Stars menu reference */
+@media (orientation:landscape) and (min-width:560px){
+ body{min-height:100dvh;height:100dvh;overflow:hidden;padding:0;background:radial-gradient(ellipse at 50% 52%,#29d9ee 0%,#138bd9 46%,#0753a7 100%)}
+ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;background-image:radial-gradient(circle,#bafaff 1.5px,transparent 2px);background-size:42px 42px}
+ .top{position:absolute;z-index:4;top:0;left:0;right:0;padding:9px 15px;align-items:flex-start}
+ .logo{font-size:16px;background:#101a3b;border:3px solid #7184ad;border-radius:9px;padding:7px}
+ .wallet{align-items:center}
+ .pill{background:#101a3b;border-color:#6179a8;border-radius:8px;padding:6px 11px}
+ .season{position:absolute;top:65px;left:50%;transform:translateX(-50%);margin:0;color:#e6fbff;text-shadow:0 2px 3px #07518e}
+ .hero{position:absolute;top:10%;left:50%;transform:translateX(-50%);z-index:1;padding:0;width:42%}
+ .hero h1{font-size:clamp(20px,3vw,34px);margin:0;text-shadow:0 3px #13518c}
+ .hero p{font-size:clamp(10px,1.4vw,14px);margin:2px}
+ .stage{position:absolute;inset:16% 20% 17%;height:auto;display:grid;place-items:center}
+ .orb{width:min(34vh,34vw);height:min(34vh,34vw);font-size:min(19vh,19vw);box-shadow:0 0 0 10px #ffffff24,0 15px 35px #003b7b66}
+ .fighter-name{bottom:2%;font-size:clamp(10px,1.5vw,15px)}
+ .quick{display:none}
+ .hint{display:none}
+ .nav{display:none}
+ .primary{position:fixed;z-index:5;right:1.5%;bottom:2%;width:25%;max-width:none;margin:0;padding:clamp(10px,2.4vh,19px);font-size:clamp(16px,2.4vw,25px);border:3px solid #fff2;border-radius:10px;box-shadow:0 5px #995019}
+ .side-menu{position:fixed;z-index:5;top:29%;bottom:22%;display:flex;flex-direction:column;justify-content:space-around;gap:7px;width:clamp(72px,10vw,110px)}
+ .side-menu.left{left:1.2%}.side-menu.right{right:1.2%}
+ .side-menu button{min-height:48px;padding:6px 3px;background:linear-gradient(#314d7c,#172b51);border:2px solid #8ba6d3;border-radius:8px;color:white;font-weight:1000;font-size:clamp(10px,1.2vw,14px);text-shadow:0 2px #000;box-shadow:0 3px #101a3b}
+ .side-menu button span{display:block;font-size:clamp(19px,3vh,29px);line-height:1.1}
+ #musicToggle{border:2px solid #6b83b4;border-radius:8px;background:#101a3b;color:white;font-weight:900;padding:7px 10px}
+ #panel{z-index:8}
+}
+@media (orientation:portrait){
+ .side-menu{display:none}
+ #musicToggle{border:2px solid #5976ad;border-radius:10px;background:#101a3b;color:white;font-weight:900;padding:7px 9px}
+}
+</style></head><body>
+<header class="top"><div class="logo">BRAWL<br>ARENA</div><div class="wallet"><div class="pill">🟡 <span id="coins">1250</span></div><div class="pill">💎 <span id="gems">50</span></div><button id="musicToggle" onclick="toggleMusic()" aria-label="Включить музыку">♫ ВКЛ. МУЗЫКУ</button></div></header>
+<aside class="side-menu left" aria-label="Игровое меню">
+<button onclick="openPanel('shop')"><span>🛒</span>МАГАЗИН</button>
+<button onclick="openPanel('fighters')"><span>🥊</span>БОЙЦЫ</button>
+<button onclick="openPanel('news')"><span>📰</span>НОВОСТИ</button>
+</aside>
+<aside class="side-menu right" aria-label="Социальное меню">
+<button onclick="openPanel('friends')"><span>👥</span>ДРУЗЬЯ</button>
+<button onclick="openPanel('club')"><span>🛡️</span>КЛУБ</button>
+<button onclick="openPanel('chat')"><span>💬</span>ЧАТ</button>
+</aside>
 <div class="season">СЕЗОН 01 · АРЕНА ЛЕГЕНД</div><section class="hero"><h1>ГОТОВ К БОЮ?</h1><p>Выбери бойца и покажи свой стиль</p></section>
 <div class="stage"><div class="orb" id="heroIcon">🤠</div><div class="fighter-name" id="heroName">RANGER · РАНГ 8</div></div>
 <button class="primary" onclick="openPanel('modes')">⚔ ИГРАТЬ</button>
@@ -35,6 +76,20 @@
 <div class="panel" id="panel"><button class="close" onclick="closePanel()">ЗАКРЫТЬ ✕</button><h2 id="ptitle"></h2><div id="pbody"></div></div>
 
 <script>
+
+// Оригинальная короткая аркадная мелодия на Web Audio; запускается только после нажатия.
+let musicContext=null,musicTimer=null,musicOn=false,musicStep=0;
+function toggleMusic(){
+ const button=document.getElementById('musicToggle');
+ if(musicOn){musicOn=false;clearInterval(musicTimer);musicTimer=null;if(musicContext)musicContext.suspend();button.textContent='♫ ВКЛ. МУЗЫКУ';return}
+ const AC=window.AudioContext||window.webkitAudioContext;
+ if(!AC){button.textContent='ЗВУК НЕДОСТУПЕН';return}
+ if(!musicContext)musicContext=new AC();
+ musicContext.resume();musicOn=true;button.textContent='♫ МУЗЫКА: ВКЛ.';
+ const notes=[392,494,587,494,440,523,659,587,392,494,587,784,659,587,494,440];
+ const playNote=()=>{if(!musicOn)return;const t=musicContext.currentTime,osc=musicContext.createOscillator(),gain=musicContext.createGain();osc.type='triangle';osc.frequency.value=notes[musicStep++%notes.length];gain.gain.setValueAtTime(.0001,t);gain.gain.exponentialRampToValueAtTime(.035,t+.025);gain.gain.exponentialRampToValueAtTime(.0001,t+.23);osc.connect(gain);gain.connect(musicContext.destination);osc.start(t);osc.stop(t+.24)};
+ playNote();musicTimer=setInterval(playNote,260);
+}
 let coins=Number(localStorage.getItem('ba_coins')||1250),gems=Number(localStorage.getItem('ba_gems')||50),selected=localStorage.getItem('ba_fighter')||'Ranger';
 const fighters=[{name:'Ranger',icon:'🤠',desc:'Меткий стрелок на средней дистанции',rarity:'ОБЫЧНЫЙ'},{name:'Volt',icon:'⚡',desc:'Быстрый боец с резкими атаками',rarity:'РЕДКИЙ'},{name:'Titan',icon:'🛡️',desc:'Крепкий защитник команды',rarity:'ЭПИЧЕСКИЙ'}];
 const modes=[['💎','ЗАХВАТ КРИСТАЛЛОВ','Собирай кристаллы и удерживай преимущество'],['🏆','СТОЛКНОВЕНИЕ','Сражайся за последнее место на арене'],['⚽','БРОУЛБОЛ','Забей два гола и победи']];
