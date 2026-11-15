@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: '20'
       - name: Install server dependencies
-        run: npm ci
+        run: npm install --omit=dev
       - name: Start WebSocket game server
         run: |
           PORT=3000 nohup npm start > server.log 2>&1 &
