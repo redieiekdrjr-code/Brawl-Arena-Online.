@@ -38,7 +38,7 @@ $('wins').textContent=wins;
 const rand=(a,b)=>a+Math.random()*(b-a),dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 function arena(){walls=[{x:125,y:110,w:145,h:48},{x:365,y:65,w:70,h:125},{x:630,y:115,w:145,h:48},{x:180,y:355,w:82,h:125},{x:405,y:425,w:130,h:50},{x:680,y:350,w:75,h:125},{x:385,y:250,w:130,h:55}];}
 function start(){
-mode=$('mode').value;const type=$('hero').value,stats={shelly:[100,3.1],colt:[90,3.35],bull:[150,2.55],nita:[110,3.0]}[type];
+bear=null;superEffect=0;mode=$('mode').value;const type=$('hero').value,stats={shelly:[100,3.1],colt:[90,3.35],bull:[150,2.55],nita:[110,3.0]}[type];
 player={x:450,y:300,r:type==='bull'?23:19,hp:stats[0],max:stats[0],speed:stats[1],type,hit:0,angle:0};
 bots=[];shots=[];gems=[];kills=0;score=0;superCharge=0;frame=0;arena();
 for(let i=0;i<7;i++){let p;do{p={x:rand(55,845),y:rand(55,545),r:19,hp:95,max:95,speed:rand(1.05,1.5),cool:rand(25,90),angle:0};}while(dist(p,player)<180);bots.push(p);}
@@ -56,7 +56,21 @@ for(let i=0;i<count;i++){let off=(i-(count-1)/2)*spread;shots.push({x:a.x+Math.c
 function nearestBot(){return bots.reduce((best,b)=>b.hp>0&&(!best||dist(player,b)<dist(player,best))?b:best,null);}
 function attack(){if(!running||player.hit>0)return;let target=nearestBot();if(target){shoot(player,target);player.hit=player.type==='colt'?8:17;}}
 $('fire').addEventListener('pointerdown',e=>{e.preventDefault();fire=true;attack();});['pointerup','pointercancel','pointerleave'].forEach(ev=>$('fire').addEventListener(ev,()=>fire=false));
-$('super').addEventListener('pointerdown',e=>{e.preventDefault();if(!running||superCharge<100)return;superCharge=0;bots.filter(b=>b.hp>0&&dist(player,b)<220).forEach(b=>damageBot(b,48));player.hp=Math.min(player.max,player.hp+28);$('super').classList.remove('ready');});
+let bear=null,superEffect=0;
+$('super').addEventListener('pointerdown',e=>{
+e.preventDefault();if(!running||superCharge<100)return;superCharge=0;$('super').classList.remove('ready');
+if(player.type==='shelly'){
+bots.filter(b=>b.hp>0&&dist(player,b)<245).forEach(b=>damageBot(b,58));
+superEffect=18;
+}else if(player.type==='colt'){
+for(let i=0;i<18;i++){let a=i*Math.PI*2/18;shots.push({x:player.x,y:player.y,vx:Math.cos(a)*10,vy:Math.sin(a)*10,life:58,owner:player,damage:20});}
+superEffect=24;
+}else if(player.type==='bull'){
+let a=player.angle||0;for(let i=0;i<18;i++){move(player,Math.cos(a)*9,Math.sin(a)*9);bots.filter(b=>b.hp>0&&dist(player,b)<b.r+player.r+10).forEach(b=>damageBot(b,42));}superEffect=22;
+}else{
+bear={x:player.x+28,y:player.y+12,r:22,hp:190,max:190,cool:0};superEffect=20;
+}
+});
 function damageBot(b,amount){b.hp-=amount;superCharge=Math.min(100,superCharge+amount*.35);if(b.hp<=0){kills++;gems.push({x:b.x,y:b.y,r:9});}}
 let active=false;
 function setJoy(e){let r=$('pad').getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),len=Math.hypot(dx,dy),m=Math.min(1,len/(r.width*.35));joy.x=len?dx/len*m:0;joy.y=len?dy/len*m:0;$('stick').style.transform='translate('+joy.x*25+'px,'+joy.y*25+'px)';}
@@ -68,6 +82,11 @@ $('menu').classList.remove('hidden');$('again').onclick=()=>{location.reload();}
 }
 function update(){
 if(!running)return;frame++;if(player.hit>0)player.hit--;move(player,joy.x*player.speed,joy.y*player.speed);if(fire&&frame%9===0)attack();
+if(bear){
+let target=bots.reduce((best,b)=>b.hp>0&&(!best||dist(bear,b)<dist(bear,best))?b:best,null);
+if(target){let a=Math.atan2(target.y-bear.y,target.x-bear.x),d=dist(bear,target);if(d>bear.r+target.r+5){let nx=bear.x+Math.cos(a)*2.5,ny=bear.y+Math.sin(a)*2.5;if(!blocked(bear,nx,ny)){bear.x=nx;bear.y=ny;}}else if(bear.cool--<=0){damageBot(target,24);bear.cool=32;}}
+if(bear.hp<=0)bear=null;
+}
 bots.forEach(b=>{if(b.hp<=0)return;let d=dist(b,player),ang=Math.atan2(player.y-b.y,player.x-b.x);b.angle=ang;if(d>155)move(b,Math.cos(ang)*b.speed,Math.sin(ang)*b.speed);else if(d<100)move(b,-Math.cos(ang)*b.speed,-Math.sin(ang)*b.speed);b.cool--;if(b.cool<=0&&d<430){shoot(b,player);b.cool=rand(65,115);}});
 shots=shots.filter(s=>{s.x+=s.vx;s.y+=s.vy;s.life--;if(s.life<=0||s.x<0||s.x>W||s.y<0||s.y>H||walls.some(w=>s.x>w.x&&s.x<w.x+w.w&&s.y>w.y&&s.y<w.y+w.h))return false;
 if(s.owner===player){let b=bots.find(b=>b.hp>0&&dist(s,b)<b.r+6);if(b){damageBot(b,s.damage);return false;}}
@@ -84,9 +103,9 @@ ctx.clearRect(0,0,W,H);ctx.fillStyle='#76bd55';ctx.fillRect(0,0,W,H);ctx.strokeS
 for(let i=0;i<W;i+=45){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,H);ctx.stroke();}for(let j=0;j<H;j+=45){ctx.beginPath();ctx.moveTo(0,j);ctx.lineTo(W,j);ctx.stroke();}
 walls.forEach(w=>{ctx.fillStyle='#9a633e';ctx.fillRect(w.x,w.y,w.w,w.h);ctx.fillStyle='#d99b62';ctx.fillRect(w.x+5,w.y+5,w.w-10,w.h-10);ctx.strokeStyle='#75472f';ctx.lineWidth=5;ctx.strokeRect(w.x,w.y,w.w,w.h);});
 gems.forEach(g=>{ctx.fillStyle='#6ef6ff';ctx.beginPath();ctx.moveTo(g.x,g.y-g.r);ctx.lineTo(g.x+g.r,g.y);ctx.lineTo(g.x,g.y+g.r);ctx.lineTo(g.x-g.r,g.y);ctx.closePath();ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();});
-bots.forEach(b=>{if(b.hp>0)circle(b,'#e95a4c');});if(player)circle(player,player.type==='bull'?'#e9a43c':player.type==='colt'?'#398be9':player.type==='nita'?'#9b6be8':'#ed6aab');
+bots.forEach(b=>{if(b.hp>0)circle(b,'#e95a4c');});if(player)circle(player,player.type==='bull'?'#e9a43c':player.type==='colt'?'#398be9':player.type==='nita'?'#9b6be8':'#ed6aab');if(bear)circle(bear,'#d49a54');
 shots.forEach(s=>{ctx.fillStyle=s.owner===player?'#ffe75c':'#ff9b62';ctx.beginPath();ctx.arc(s.x,s.y,6,0,7);ctx.fill();});
-if(running){ctx.fillStyle='#10233c';ctx.font='bold 18px Arial';ctx.fillText(mode==='gem'?'СОБЕРИ 10 КРИСТАЛЛОВ':'ПОСЛЕДНИЙ В ЖИВЫХ',20,30);ctx.fillText('Враги: '+bots.filter(b=>b.hp>0).length,20,55);ctx.fillStyle='#17284b';ctx.fillRect(20,68,130,10);ctx.fillStyle='#d77bff';ctx.fillRect(20,68,130*superCharge/100,10);ctx.strokeStyle='#fff';ctx.strokeRect(20,68,130,10);}
+if(running){ctx.fillStyle='#10233c';ctx.font='bold 18px Arial';ctx.fillText(mode==='gem'?'СОБЕРИ 10 КРИСТАЛЛОВ':'ПОСЛЕДНИЙ В ЖИВЫХ',20,30);ctx.fillText('Враги: '+bots.filter(b=>b.hp>0).length,20,55);if(bear){ctx.fillStyle='#fff';ctx.fillText('МЕДВЕДЬ-СОЮЗНИК',170,30);}ctx.fillStyle='#17284b';ctx.fillRect(20,68,130,10);ctx.fillStyle='#d77bff';ctx.fillRect(20,68,130*superCharge/100,10);ctx.strokeStyle='#fff';ctx.strokeRect(20,68,130,10);}
 }
 function loop(){update();draw();requestAnimationFrame(loop);}requestAnimationFrame(loop);
 })();
