@@ -10,12 +10,21 @@ header{height:52px;flex:none;display:flex;align-items:center;justify-content:spa
 header b{color:#ffdc45;font-size:20px;text-shadow:2px 2px #9b4b20}#hud{display:flex;gap:10px;font-size:13px}
 main{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:6px;position:relative}
 canvas{display:block;width:min(100%,900px,calc((100dvh - 180px)*1.5));height:auto;max-height:100%;aspect-ratio:3/2;border:4px solid #0b1429;border-radius:13px;background:#6fb64c;box-shadow:0 8px 28px #0008}
-#menu{position:absolute;inset:6px;display:flex;align-items:center;justify-content:center;background:#071329bd;border-radius:12px}
-#panel{width:min(92%,390px);background:linear-gradient(#31568b,#1b2e56);border:4px solid #10213f;border-radius:18px;padding:18px;text-align:center;box-shadow:0 8px #09152a}
-h1{margin:0 0 4px;color:#ffdf4b;font-size:32px;text-shadow:3px 3px #9b4b20}#panel p{color:#dceaff;font-size:14px}
-button,select{font-weight:900;border:0;border-radius:12px;padding:12px 16px;color:#fff;background:linear-gradient(#ffca45,#f18a22);box-shadow:0 5px #9a4b18;font-size:16px;margin:5px}
-button:active{transform:translateY(3px);box-shadow:0 2px #9a4b18}select{background:#18345e;border:2px solid #6688ba;box-shadow:none;width:100%;margin:7px 0}
-.small{font-size:12px;color:#a9c3e9}#controls{height:112px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:7px 22px 12px;background:linear-gradient(#17284b,#0c1730)}
+#menu{position:absolute;inset:6px;display:flex;align-items:center;justify-content:center;overflow:auto;background:radial-gradient(ellipse at 50% 15%,#547bc4a8 0,transparent 55%),linear-gradient(135deg,#08152eef,#172c50ed 55%,#09152fef);border-radius:12px;padding:14px}
+#menu:before,#menu:after{content:"";position:absolute;width:190px;height:190px;border:22px solid #ffffff0b;border-radius:36px;transform:rotate(28deg);pointer-events:none}
+#menu:before{left:-90px;top:12%}#menu:after{right:-100px;bottom:5%}
+#panel{position:relative;z-index:1;width:min(94%,430px);max-height:100%;overflow:auto;background:linear-gradient(160deg,#294d80,#172b50 70%);border:2px solid #7da7e9;border-radius:22px;padding:clamp(15px,3vh,25px);text-align:center;box-shadow:0 10px 0 #08152d,0 18px 35px #0009}
+#panel h1{margin:0;color:#ffdf4b;font-size:clamp(27px,7vw,38px);letter-spacing:1px;text-shadow:0 3px #a94d1d,2px 5px #07152b}
+#panel .tagline{margin:7px 0 15px;color:#e0edff;font-size:14px}
+#panel .section-title{display:block;text-align:left;margin:12px 2px 5px;color:#a9c8f5;font-size:11px;font-weight:900;letter-spacing:1.5px}
+#panel select{display:block;width:100%;margin:0;padding:13px 14px;border:2px solid #6e91c5;border-radius:12px;background:#102747;color:white;font-weight:800;font-size:15px;box-shadow:inset 0 2px 5px #0005}
+#panel #start,#panel #again{width:100%;margin:18px 0 8px;padding:15px;border:2px solid #ffe78b;border-radius:14px;background:linear-gradient(#ffe45a,#ff9e22);color:#66310c;font-size:19px;letter-spacing:1px;box-shadow:0 6px 0 #9b4b18,0 9px 15px #0005}
+#panel button:active{transform:translateY(3px);box-shadow:0 3px 0 #9b4b18}
+#panel .small{margin:8px 0 0;color:#b8ccef;font-size:11px;line-height:1.45}
+#panel .menu-emblem{width:68px;height:68px;margin:0 auto 8px;border-radius:20px;display:grid;place-items:center;background:linear-gradient(145deg,#ffdf59,#f18a22);border:3px solid #fff0a8;box-shadow:0 5px 0 #9a4b18;font-size:36px;text-shadow:0 2px #a34c17}
+#panel .menu-stats{display:flex;justify-content:center;gap:8px;margin:0 0 10px}
+#panel .menu-stats span{padding:6px 10px;border-radius:20px;background:#0c1d38;color:#dceaff;font-size:11px;font-weight:800}
+@media(max-height:520px){#panel{padding:10px}#panel .menu-emblem{width:48px;height:48px;font-size:26px;margin-bottom:4px}#panel .tagline{margin:4px 0 8px}#panel .section-title{margin-top:7px}#panel #start{margin:12px 0 5px}}#controls{height:112px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:7px 22px 12px;background:linear-gradient(#17284b,#0c1730)}
 .pad{width:88px;height:88px;border-radius:50%;background:#ffffff20;border:3px solid #ffffff55;position:relative}.stick{position:absolute;width:38px;height:38px;border-radius:50%;background:#d9e8ffbb;left:22px;top:22px;pointer-events:none}
 .actions{display:flex;gap:12px;align-items:center}.act{width:70px;height:70px;border-radius:50%;background:linear-gradient(#ffdf54,#f28a20);border:4px solid #a34c17;box-shadow:0 5px #6c3414;font-size:23px}.act.super{background:linear-gradient(#d77bff,#7536c5);border-color:#4a247d;opacity:.55}.act.ready{opacity:1;filter:drop-shadow(0 0 9px #e6aaff)}
 .hidden{display:none!important}
@@ -24,10 +33,11 @@ button:active{transform:translateY(3px);box-shadow:0 2px #9a4b18}select{backgrou
 <body><div id="app">
 <header><b>★ SABLOX BRAWL</b><div id="hud"><span>🏆 <span id="wins">0</span></span><span>💎 <span id="gems">0</span></span><span>❤️ <span id="hp">100</span></span></div></header>
 <main><canvas id="game" width="900" height="600"></canvas><div id="menu"><div id="panel">
-<h1>SABLOX BRAWL</h1><p>Выбирай бойца и выходи на арену!</p>
-<label>ТВОЙ БОЕЦ</label><select id="hero"><option value="shelly">Шелли · дробовик</option><option value="colt">Кольт · дальняя атака</option><option value="bull">Булл · тяжёлый боец</option><option value="nita">Нита · медведь</option><option value="brock">Брок · ракетница</option></select>
-<label>РЕЖИМ</label><select id="mode"><option value="showdown">Столкновение · выживание</option><option value="gem">Кристаллы · собери 10</option></select>
-<button id="start">ИГРАТЬ ▶</button><p class="small">Левый джойстик — движение · ⚡ атака · ✦ супер</p></div></div></main>
+<div class="menu-emblem">★</div><h1>SABLOX BRAWL</h1><p class="tagline">Собери команду. Выходи на арену. Побеждай!</p>
+<div class="menu-stats"><span>⚡ 5 бойцов</span><span>🏟️ 2 режима</span><span>🎮 Арена</span></div>
+<label class="section-title" for="hero">ВЫБЕРИ БОЙЦА</label><select id="hero"><option value="shelly">🌸 Шелли · дробовик</option><option value="colt">🔫 Кольт · дальняя атака</option><option value="bull">🐂 Булл · тяжёлый боец</option><option value="nita">🐻 Нита · медведь</option><option value="brock">🚀 Брок · ракетница</option></select>
+<label class="section-title" for="mode">ВЫБЕРИ РЕЖИМ</label><select id="mode"><option value="showdown">☠️ Столкновение · выживание</option><option value="gem">💎 Кристаллы · собери 10</option></select>
+<button id="start">В БОЙ ▶</button><p class="small">Левый джойстик — движение<br>⚡ атака · ✦ суперспособность</p></div></div></main>
 <div id="controls"><div class="pad" id="pad"><div class="stick" id="stick"></div></div><div class="actions"><button class="act" id="fire">⚡</button><button class="act super" id="super">✦</button></div></div>
 </div>
 <script>
